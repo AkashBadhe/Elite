@@ -7,6 +7,7 @@ import {
   ADD_TestDrive,
   DELETE_TestDrive,
   EDIT_TestDrive,
+  UPDATE_TestDrive,
   SAVE_TestDrive,
   SUBMIT_TestDrive,
   ADD_TestCase,
@@ -48,7 +49,7 @@ const editTestDrive = createAction<TestDrive, TestDrive>(
 );
 
 const updateTestDrive = createAction<TestDrive, any, TestDrive>(
-  EDIT_TestDrive,
+  UPDATE_TestDrive,
   (e: any, testDrive: TestDrive) => {
     if (e.target.type && e.target.type.toLowerCase() === "select-multiple") {
       let list = e.target.selectedOptions;
@@ -64,13 +65,6 @@ const updateTestDrive = createAction<TestDrive, any, TestDrive>(
     return testDrive;
   }
 );
-// {
-//   if (e.target.type && e.target.type.toLowerCase() === "select-multiple") {
-//       this.props.testDrive[e.target.name].push(e.target.value)
-//   } else {
-//       this.props.testDrive[e.target.name] = e.target.value;
-//   }
-// }
 
 const deleteTestDrive = createAction<number, number>(
   DELETE_TestDrive,

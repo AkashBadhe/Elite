@@ -96,7 +96,7 @@ class TestCasesForm extends React.Component<TestCaseFormProps, TestCaseFormState
                             <Button bsStyle="primary" onClick={this.handleSave} >Save</Button>
 
                             {/* Indicates a successful or positive action */}
-                            <Button bsStyle="success" onClick={this.handleEdit} >Edit</Button>
+                            
                         </ButtonToolbar>
 
                     </form>

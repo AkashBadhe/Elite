@@ -2,8 +2,15 @@
 export const ADD_TestDrive = 'ADDTestDrive';
 export const DELETE_TestDrive = 'DELETETestDrive';
 export const EDIT_TestDrive = 'EDITTestDrive';
+export const UPDATE_TestDrive = 'UPDATE_TestDrive';
 export const SAVE_TestDrive = 'SAVETestDrive';
 export const SUBMIT_TestDrive = 'SUBMITTestDrive';
+export const SAVE_TestDrive_PENDING = "SAVETestDrive_PENDING";
+export const SAVE_TestDrive_FULFILLED = "SAVETestDrive_FULFILLED";
+export const SUBMIT_TestDrive_PENDING = "SUBMITTestDrive_PENDING";
+export const SUBMIT_TestDrive_FULFILLED = "SUBMITTestDrive_FULFILLED";
+
+
 
 // Test Case Actions.
 

@@ -1,10 +1,14 @@
 export type TestCase = {
+    id: number;
     title: string;
     description: string;
     expectedOutcome: string;
+    isInEditMode: boolean;
+    testCaseType: string;
 }
 
 export type Question = {
+    id: number;
     question: string;
     type: string;
     options: Array<string>;
@@ -16,22 +20,24 @@ export type TestDrive = {
     title: string;
     description?: string;
     maxPoints?: number;
-    startDate: Date;
-    endDate?: Date;
+    startDate: string;
+    endDate: string;
     expectedBusinessValue: string;
-    functon: string;
-    location: string;
+    functon: Array<string>;
+    location: Array<string>;
     requiredDevices: Array<string>;
     requiredOs: Array<string>;
     maxTestDrivers: number;
-    TestCases: Array<TestCase>;
-    Survey: Array<Question>;
+    testCases: Array<TestCase>;
+    questions: Array<Question>;
     status: string;
 };
 
 
 export type IState = {
     testDrives: TestDrive[],
+    testDrive: TestDrive,
+    testCase: TestCase,
     loading: boolean
 }
 

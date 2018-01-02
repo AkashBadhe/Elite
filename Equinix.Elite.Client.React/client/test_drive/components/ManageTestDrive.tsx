@@ -45,8 +45,7 @@ class ManageTestDrive extends React.Component<AppProps> {
                             />
                         </Tab>
                         <Tab label="Add Test Cases">
-                            <h1>Test Cases</h1>
-                            <TestCases testCases={testDrive.testCases}
+                            <TestCases testCases={testDrive.testCases} 
                                 saveTestCase={(t) => dispatch(saveTestCase(t))}
                                 editTestCase={(t) => dispatch(editTestCase(t))}
                                 onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
@@ -69,10 +68,10 @@ const mapStateToProps = (state, ownProps) => {
     let testDriveId = ownProps.match.params.id;
     let testDrives = state.testDriveState.testDrives
     let testDrive;
-    if (state.asyncInitialState.loaded && state.testDriveState.testDrives) {
-        testDrive = getCourseById(state.testDriveState.testDrives, testDriveId);
+    if (state.asyncInitialState.loaded && state.testDriveState.testDrive) {
+        testDrive = state.testDriveState.testDrive;
     } else {
-        testDrive = {}
+        testDrive = {} // Call api to get test drive to handle direct url change case.
     }
     return {
         testDrive: testDrive,

@@ -12,7 +12,7 @@ import { TestDrive } from '../model';
 interface AppProps {
     testDrive: model.TestDrive;
     handleDelete: (id: number) => any;
-    handleEdit: (id: TestDrive) => any;
+    handleEdit: (testDrive: TestDrive) => any;
 };
 
 class TestDriveItem extends React.Component<AppProps> {
@@ -20,18 +20,17 @@ class TestDriveItem extends React.Component<AppProps> {
         super(props, context);
     }
     render() {
+        const {handleEdit, handleDelete, testDrive} = this.props;
         return (
             <div className="testDriveItem">
                 {/* <li></li> */}
                 <li><Link to={'/testdrive/' + this.props.testDrive.id}>{this.props.testDrive.title}</Link></li>
                 <ButtonToolbar>
                     <Link to={'/testdrive/' + this.props.testDrive.id}>
-                        <Button bsStyle="primary">
-                            Edit
-                </Button>
+                        <Button bsStyle="primary" onClick={()=> handleEdit(testDrive)}>Edit</Button>
                     </Link>
                     <Button bsStyle="danger"
-                        onClick={() => this.props.handleDelete(this.props.testDrive.id)}  >Delete</Button>
+                        onClick={() => handleDelete(this.props.testDrive.id)}  >Delete</Button>
                 </ButtonToolbar>
             </div>)
     }
