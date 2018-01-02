@@ -27,7 +27,7 @@ interface TestCaseFormState {
     testCase
 };
 
-class TestDriveForm extends React.Component<TestCaseFormProps, TestCaseFormState> {
+class TestCasesForm extends React.Component<TestCaseFormProps, TestCaseFormState> {
     formStyle = {
         marginTop: '20px',
         marginBottom: '50px'
@@ -105,4 +105,4 @@ class TestDriveForm extends React.Component<TestCaseFormProps, TestCaseFormState
     }
 }
 
-export default TestDriveForm;
+export default TestCasesForm;

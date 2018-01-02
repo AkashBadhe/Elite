@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap-tabs';
 import TestDriveForm from './TestDriveForm';
-import TestCaseForm from './TestCaseForm';
+import TestCases from './TestCases';
 import Loader from 'react-loader-advanced';
 
 import {
@@ -44,13 +44,14 @@ class ManageTestDrive extends React.Component<AppProps> {
                                 onChange={(e, testDrive) => dispatch(updateTestDrive(e, testDrive))}
                             />
                         </Tab>
-                        <Tab label="Add Test Cases">Tab 2 content</Tab>
-                        <TestCaseForm
-                            testCase={testDrive.TestCases[0]}
-                            saveTestCase={(t) => dispatch(saveTestCase(t))}
-                            editTestCase={(t) => dispatch(editTestCase(t))}
-                            onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
-                        />
+                        <Tab label="Add Test Cases">
+                            <h1>Test Cases</h1>
+                            <TestCases testCases={testDrive.testCases}
+                                saveTestCase={(t) => dispatch(saveTestCase(t))}
+                                editTestCase={(t) => dispatch(editTestCase(t))}
+                                onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
+                            />
+                        </Tab>
                         <Tab label="Add Survey">Add Survey</Tab>
                     </Tabs>
                 </Loader>
