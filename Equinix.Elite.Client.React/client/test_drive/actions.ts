@@ -18,7 +18,8 @@ import {
   DELETEQuestion,
   EDITQuestion,
   SAVEQuestion,
-  SUBMITQuestion
+  SUBMITQuestion,
+  UPDATE_TestCase
 } from './constants/ActionTypes';
 
 //  const addTestDrive = createAction<TestDrive, TestDrive>(
@@ -78,33 +79,53 @@ const deleteTestDrive = createAction<number, number>(
   }
 );
 
+const editTestCase = createAction<TestCase, TestCase>(
+  EDIT_TestCase,
+  (testCase: TestCase) => {
+    return testCase;
+  }
+)
 
-//  const addTestCase = createAction<TestDrive, TestDrive>();
-//  const deleteestCase = createAction<TestDrive, TestDrive>();
-//  const editTestCase = createAction<TestDrive, TestDrive>();
-//  const saveTestCase = createAction<TestDrive, TestDrive>();
-//  const submitTestCase = createAction<TestDrive, TestDrive>();
-//  const addQuestion = createAction<TestDrive, TestDrive>();
-//  const deleteQuestion = createAction<TestDrive, TestDrive>();
-//  const editQuestion = createAction<TestDrive, TestDrive>();
-//  const saveQuestion = createAction<TestDrive, TestDrive>();
-//  const submitQuestion = createAction<TestDrive, TestDrive>();
+const saveTestCase = createAction<TestCase, TestCase>(
+  SAVE_TestCase,
+  (testCase:TestCase) => {
+    return testCase
+  }
+)
+
+const deleteestCase = createAction<number, number>(
+  DELETE_TestCase,
+  (id: number)=>{
+    return id;
+  }
+)
+
+const updateTestCase = createAction<TestCase, any, TestCase>(
+  UPDATE_TestCase,
+  (e: any, testCase: TestCase) => {
+    if (e.target.type && e.target.type.toLowerCase() === "select-multiple") {
+      let list = e.target.selectedOptions;
+      let selectedItems = [];
+      for(let i =0; i< list.length; i++){
+        selectedItems.push(list[i].value);
+      }
+
+      testCase[e.target.name] = selectedItems;
+    } else {
+      testCase[e.target.name] = e.target.value;
+    }
+    return testCase;
+  }
+)
 
 export {
-  //addTestDrive,
   deleteTestDrive,
   editTestDrive,
   saveTestDrive,
   submitTestDrive,
-  updateTestDrive
-  // addTestCase,
-  // deleteestCase,
-  // editTestCase,
-  // saveTestCase,
-  // submitTestCase,
-  // addQuestion,
-  // deleteQuestion,
-  // editQuestion,
-  // saveQuestion,
-  // submitQuestion
+  updateTestDrive,
+  editTestCase,
+  deleteestCase,
+  saveTestCase,
+  updateTestCase
 }

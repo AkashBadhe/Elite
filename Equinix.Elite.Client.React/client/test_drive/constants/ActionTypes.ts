@@ -12,6 +12,7 @@ export const DELETE_TestCase = 'DELETE_TestCase';
 export const EDIT_TestCase = 'EDIT_TestCase';
 export const SAVE_TestCase = 'SAVE_TestCase';
 export const SUBMIT_TestCase = 'SUBMIT_TestCase';
+export const UPDATE_TestCase = 'UPDATE_TestCase';
 
 // Question Actions.
 export const ADDQuestion = 'ADDQuestion';

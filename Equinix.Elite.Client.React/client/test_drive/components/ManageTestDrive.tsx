@@ -3,13 +3,18 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { Tabs, Tab } from 'react-bootstrap-tabs';
 import TestDriveForm from './TestDriveForm';
+import TestCaseForm from './TestCaseForm';
 import Loader from 'react-loader-advanced';
 
 import {
     model,
     saveTestDrive,
     submitTestDrive,
-    updateTestDrive
+    updateTestDrive,
+    saveTestCase,
+    editTestCase,
+    deleteestCase,
+    updateTestCase
 } from '../../test_drive';
 
 interface AppProps {
@@ -29,19 +34,25 @@ class ManageTestDrive extends React.Component<AppProps> {
         return (
             <div>
                 <Loader show={loading} message={'Loading...'}>
-                <Tabs>
-                    <Tab label="Test Drive Details">
-                    
-                        <TestDriveForm
-                            testDrive={testDrive}
-                            saveTestDrive={(t) => dispatch(saveTestDrive(t))}
-                            submitTestDrive={(t) => dispatch(submitTestDrive(t))}
-                            onChange={(e, testDrive) => dispatch(updateTestDrive(e, testDrive))}
+                    <Tabs>
+                        <Tab label="Test Drive Details">
+
+                            <TestDriveForm
+                                testDrive={testDrive}
+                                saveTestDrive={(t) => dispatch(saveTestDrive(t))}
+                                submitTestDrive={(t) => dispatch(submitTestDrive(t))}
+                                onChange={(e, testDrive) => dispatch(updateTestDrive(e, testDrive))}
+                            />
+                        </Tab>
+                        <Tab label="Add Test Cases">Tab 2 content</Tab>
+                        <TestCaseForm
+                            testCase={testDrive.TestCases[0]}
+                            saveTestCase={(t) => dispatch(saveTestCase(t))}
+                            editTestCase={(t) => dispatch(editTestCase(t))}
+                            onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
                         />
-                    </Tab>
-                    <Tab label="Add Test Cases">Tab 2 content</Tab>
-                    <Tab label="Add Survey">Add Survey</Tab>
-                </Tabs>
+                        <Tab label="Add Survey">Add Survey</Tab>
+                    </Tabs>
                 </Loader>
             </div>
         );
@@ -57,9 +68,9 @@ const mapStateToProps = (state, ownProps) => {
     let testDriveId = ownProps.match.params.id;
     let testDrives = state.testDriveState.testDrives
     let testDrive;
-    if(state.asyncInitialState.loaded && state.testDriveState.testDrives){
-        testDrive =  getCourseById(state.testDriveState.testDrives, testDriveId);
-    } else{
+    if (state.asyncInitialState.loaded && state.testDriveState.testDrives) {
+        testDrive = getCourseById(state.testDriveState.testDrives, testDriveId);
+    } else {
         testDrive = {}
     }
     return {
