@@ -17,6 +17,7 @@ const data = [
     requiredOs: ["OS1", "OS2"],
     maxTestDrivers: 5000,
     testCases: [{
+      id: 1,
       title: "Test Case 1",
       description: "Test Case Description",
       expectedOutcome: "Test Case expected values.",
@@ -24,6 +25,7 @@ const data = [
       testCaseType: "Choice"
     },
     {
+      id: 2,
       title: "Test Case 2",
       description: "Test Case Description",
       expectedOutcome: "Test Case expected values.",
@@ -31,6 +33,7 @@ const data = [
       testCaseType: "Choice"
     },
     {
+      id: 3,
       title: "Test Case 3",
       description: "Test Case Description",
       expectedOutcome: "Test Case expected values.",

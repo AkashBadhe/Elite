@@ -21,7 +21,8 @@ import {
     DELETEQuestion,
     EDITQuestion,
     SAVEQuestion,
-    SUBMITQuestion
+    SUBMITQuestion,
+    SWITCH_Tab
 
 } from './constants/ActionTypes';
 import { access, stat } from 'fs';
@@ -54,17 +55,15 @@ const initialState: IState = {
         testCaseType: "",
     },
     testDrives: [],
-    loading: true
+    loading: true,
+    activeTab: '1'
 };
 
 export default handleActions<IState, TestDrive>({
     [UPDATE_TestDrive]: (state: IState, action: Action<TestDrive>): IState => {
         return {
             ...state,
-            testDrive: {...state.testDrive, 
-                title: action.payload.title,
-                id: action.payload.id
-            },
+            testDrive: {...state.testDrive, ...action.payload},
             loading: false,
         }
     },
@@ -74,6 +73,17 @@ export default handleActions<IState, TestDrive>({
             ...state,
             testDrive: action.payload,
             loading: false
+        }
+    },
+
+    [DELETE_TestDrive]: (state: IState, action: Action<TestDrive>): IState => {
+        const testDrives = state.testDrives;
+        return {
+            ...state,
+            testDrives: testDrives.filter((testDrive)=>{
+                return testDrive.id !== action.payload.id;
+            })
+            
         }
     },
 
@@ -119,16 +129,18 @@ export default handleActions<IState, TestDrive>({
             testDrive: {
                 ...testDrive, testCases: testDrive.testCases.map(testCase => {
                     return testCase.id === action.payload.id ?
-                        { ...action.payload, isInEditMode: true } : testCase
+                        { ...testCase, isInEditMode: true } : 
+                        {...testCase, isInEditMode: false}
                 })
-            }
+            },
+            testCase: { ...action.payload, isInEditMode: true }
         }
     },
 
     [UPDATE_TestCase]: (state: IState, action: Action<TestCase>): IState => {
         return {
             ...state,
-            testCase: action.payload
+            testCase: {...state.testCase, ...action.payload}
         }
     },
 
@@ -138,9 +150,29 @@ export default handleActions<IState, TestDrive>({
             ...state,
             testDrive: {
                 ...testDrive, testCases: testDrive.testCases.map(testCase => {
-                    return testCase.id === action.payload.id ? action.payload : testCase;
+                    return testCase.id === action.payload.id ? 
+                        {...action.payload, isInEditMode: false} : testCase;
                 })
             }
+        }
+    },
+
+    [DELETE_TestCase]: (state: IState, action: Action<number>): IState => {
+        const testDrive = state.testDrive;
+        return {
+            ...state,
+            testDrive: {
+                ...testDrive, testCases: testDrive.testCases.filter(testCase => {
+                    return testCase.id !== action.payload
+                })
+            }
+        }
+    },
+
+    [SWITCH_Tab]: (state: IState, action: Action<string>): IState => {
+        return {
+            ...state,
+            activeTab: action.payload
         }
     }
 

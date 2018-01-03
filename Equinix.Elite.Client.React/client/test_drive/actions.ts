@@ -20,7 +20,8 @@ import {
   EDITQuestion,
   SAVEQuestion,
   SUBMITQuestion,
-  UPDATE_TestCase
+  UPDATE_TestCase,
+  SWITCH_Tab
 } from './constants/ActionTypes';
 
 //  const addTestDrive = createAction<TestDrive, TestDrive>(
@@ -87,7 +88,7 @@ const saveTestCase = createAction<TestCase, TestCase>(
   }
 )
 
-const deleteestCase = createAction<number, number>(
+const deleteTestCase = createAction<number, number>(
   DELETE_TestCase,
   (id: number)=>{
     return id;
@@ -112,6 +113,13 @@ const updateTestCase = createAction<TestCase, any, TestCase>(
   }
 )
 
+const switchTab = createAction<number, number>(
+  SWITCH_Tab,
+  (key: number)=>{
+    return key;
+  }
+)
+
 export {
   deleteTestDrive,
   editTestDrive,
@@ -119,7 +127,8 @@ export {
   submitTestDrive,
   updateTestDrive,
   editTestCase,
-  deleteestCase,
+  deleteTestCase,
   saveTestCase,
-  updateTestCase
+  updateTestCase,
+  switchTab
 }

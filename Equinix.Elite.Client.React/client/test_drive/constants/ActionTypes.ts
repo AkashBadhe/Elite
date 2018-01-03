@@ -9,7 +9,7 @@ export const SAVE_TestDrive_PENDING = "SAVETestDrive_PENDING";
 export const SAVE_TestDrive_FULFILLED = "SAVETestDrive_FULFILLED";
 export const SUBMIT_TestDrive_PENDING = "SUBMITTestDrive_PENDING";
 export const SUBMIT_TestDrive_FULFILLED = "SUBMITTestDrive_FULFILLED";
-
+export const SWITCH_Tab = "SWITCH_Tab";
 
 
 // Test Case Actions.

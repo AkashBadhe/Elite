@@ -19,12 +19,14 @@ import {
 
 interface TestCaseFormProps {
     testCase: TestCase,
+    deleteTestCase: (id: number) => any;
     saveTestCase: (testCase: TestCase) => any;
     editTestCase: (TestCase: TestCase) => any;
     onChange: (event: any, TestCase: TestCase) => any;
 };
 interface TestCaseFormState {
-    testCase
+    testCase,
+    editTestCases
 };
 
 class TestCasesForm extends React.Component<TestCaseFormProps, TestCaseFormState> {
@@ -34,13 +36,14 @@ class TestCasesForm extends React.Component<TestCaseFormProps, TestCaseFormState
     }
 
     butttonGroup = {
-        float: 'right'
+        position: "relative",
+        display: "inline-block",
+        verticalAlign: "middle",
+        left: "900px"
     }
 
     constructor(props, context) {
         super(props, context);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
@@ -48,58 +51,51 @@ class TestCasesForm extends React.Component<TestCaseFormProps, TestCaseFormState
         this.props.onChange(e, this.props.onChange(e, this.props.testCase));
     }
 
-    handleSave = (e) => {
-        this.props.saveTestCase(this.props.testCase);
-    }
-
-    handleEdit = (e) => {
-        this.props.editTestCase(this.props.testCase);
-    }
-
-
     render() {
-        const { testCase } = this.props;
+        const { testCase, editTestCase, saveTestCase, deleteTestCase } = this.props;
+        testCase.isInEditMode = testCase.isInEditMode === undefined ? false : testCase.isInEditMode;
         return (
             <div className="container" style={this.formStyle}>
-                    <form>
-                        <FormGroup controlId="testDriveTitle" >
-                            <ControlLabel>Title</ControlLabel>
-                            <FormControl type="text" onChange={this.onChange} name="title"
-                                value={testCase.title || ""} />
-                            <HelpBlock>Enter the title of test drive.</HelpBlock>
-                        </FormGroup>
+                <div className="panel-group" id="testCases">
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <h4 className="panel-title">
+                                <a className="accordion-toggle" data-toggle="collapse" data-parent="#testCases" href={"#collapse" + testCase.id}>
+                                    {testCase.title}
+                                    <ButtonToolbar style={this.butttonGroup}>
+                                        <Button bsStyle="danger" onClick={() => deleteTestCase(testCase.id)}>Delete</Button>
+                                        {!testCase.isInEditMode &&
+                                            <Button bsStyle="primary" onClick={() => editTestCase(testCase)} >Edit</Button>}
+                                        {testCase.isInEditMode &&
+                                            <Button bsStyle="success" onClick={() => saveTestCase(testCase)} >Save</Button>}
+                                    </ButtonToolbar>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id={"collapse" + testCase.id} className={testCase.isInEditMode ? "panel-collapse collapse in" : "panel-collapse collapse"}>
+                            <div className="panel-body">
+                                <form>
+                                    <FormGroup controlId="testDriveTitle" >
+                                        <ControlLabel>Title</ControlLabel>
+                                        <FormControl type="text" onChange={this.onChange} name="title"
+                                            value={testCase.title || ""} />
+                                        <HelpBlock>Enter the title of test drive.</HelpBlock>
+                                    </FormGroup>
 
-                        <FormGroup controlId="testDriveDescription">
-                            <ControlLabel>Description</ControlLabel>
-                            <FormControl componentClass="textarea"
-                                placeholder="textarea"
-                                onChange={this.onChange}
-                                name="description"
-                                value={testCase.description || ""} />
-                            <HelpBlock>Descript the test drive.</HelpBlock>
-                        </FormGroup>
-
-                        {/*<FormGroup controlId="testCaseType">
-                            <ControlLabel>Test Case Type</ControlLabel>
-                            <FormControl componentClass="select"
-                                onChange={this.onChange}
-                                name="testCaseType"
-                                value={testCase. || []}>
-                                <option value="OS1">OS1</option>
-                                <option value="OS2">OS2</option>
-                                <option value="OS3">OS3</option>
-                            </FormControl>
-                        </FormGroup>*/}
-
-                        <ButtonToolbar style={this.butttonGroup}>
-                            {/* Provides extra visual weight and identifies the primary action in a set of buttons */}
-                            <Button bsStyle="primary" onClick={this.handleSave} >Save</Button>
-
-                            {/* Indicates a successful or positive action */}
-                            
-                        </ButtonToolbar>
-
-                    </form>
+                                    <FormGroup controlId="testDriveDescription">
+                                        <ControlLabel>Description</ControlLabel>
+                                        <FormControl componentClass="textarea"
+                                            placeholder="textarea"
+                                            onChange={this.onChange}
+                                            name="description"
+                                            value={testCase.description || ""} />
+                                        <HelpBlock>Descript the test drive.</HelpBlock>
+                                    </FormGroup>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }

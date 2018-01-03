@@ -7,12 +7,14 @@ import {
     model,
     saveTestCase,
     editTestCase,
-    deleteestCase,
+    deleteTestCase,
     updateTestCase
 } from '../../test_drive';
 
 interface TestCasesProps {
-    testCases: TestCase[],
+    testCases: TestCase[];
+    newTestCase: TestCase;
+    deleteTestCase: (id: number) => any;
     saveTestCase: (testCase: TestCase) => any;
     editTestCase: (TestCase: TestCase) => any;
     onChange: (event: any, TestCase: TestCase) => any;
@@ -21,27 +23,23 @@ interface TestCasesProps {
 class TestCases extends React.Component<TestCasesProps> {
     constructor(props, context) {
         super(props, context);
-       //  this.handleEdit = this.handleEdit.bind(this);
+        //  this.handleEdit = this.handleEdit.bind(this);
     }
 
     render() {
-        const { testCases, saveTestCase, editTestCase, onChange } = this.props;
+        const { testCases, saveTestCase, editTestCase, onChange, newTestCase, deleteTestCase} = this.props;
         return (
             <div className="test-cases-container" >
                 {
                     testCases && testCases.map(testCase => {
-
-                        return testCase.isInEditMode ? (<TestCaseForm testCase={testCase}
+                        return <TestCaseForm
+                            testCase={(testCase && testCase.isInEditMode) ? { ...newTestCase, isInEditMode: true } : testCase}
                             saveTestCase={saveTestCase}
                             editTestCase={editTestCase}
+                            deleteTestCase={deleteTestCase}
                             onChange={onChange}
-                            key={testCase.title} />
-                        ) : (
-                                <div>
-                                    {testCase.title}
-                                    <Button bsStyle="success" onClick={()=> editTestCase(testCase)} >Edit</Button>
-                                </div>
-                            )
+                            key={testCase.id}
+                        />
                     })
                 }
             </div>

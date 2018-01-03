@@ -38,6 +38,7 @@ export type IState = {
     testDrives: TestDrive[],
     testDrive: TestDrive,
     testCase: TestCase,
-    loading: boolean
+    loading: boolean,
+    activeTab: string
 }
 

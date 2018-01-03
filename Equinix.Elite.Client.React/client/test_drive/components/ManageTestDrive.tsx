@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { Tabs, Tab } from 'react-bootstrap-tabs';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Tabs, Tab } from 'react-bootstrap';
 import TestDriveForm from './TestDriveForm';
 import TestCases from './TestCases';
 import Loader from 'react-loader-advanced';
@@ -13,14 +14,17 @@ import {
     updateTestDrive,
     saveTestCase,
     editTestCase,
-    deleteestCase,
-    updateTestCase
+    deleteTestCase,
+    updateTestCase,
+    switchTab
 } from '../../test_drive';
 
 interface AppProps {
     testDrive: model.TestDrive;
     testDrives: model.IState;
+    testCase: model.TestCase;
     loading: boolean;
+    activeTab: string;
     dispatch: Dispatch<{}>;
 };
 
@@ -30,13 +34,13 @@ class ManageTestDrive extends React.Component<AppProps> {
     }
 
     render() {
-        const { testDrive, dispatch, loading } = this.props;
+        const { testDrive, dispatch, loading, activeTab, testCase } = this.props;
         return (
             <div>
                 <Loader show={loading} message={'Loading...'}>
-                    <Tabs>
-                        <Tab label="Test Drive Details">
-
+                    <Tabs activeKey={activeTab} onSelect={(key) => dispatch(switchTab(key))}
+                        id="controlled-tab-example">
+                        <Tab eventKey={"1"} title="Test Drive">
                             <TestDriveForm
                                 testDrive={testDrive}
                                 saveTestDrive={(t) => dispatch(saveTestDrive(t))}
@@ -44,15 +48,21 @@ class ManageTestDrive extends React.Component<AppProps> {
                                 onChange={(e, testDrive) => dispatch(updateTestDrive(e, testDrive))}
                             />
                         </Tab>
-                        <Tab label="Add Test Cases">
-                            <TestCases testCases={testDrive.testCases} 
+                        <Tab eventKey={"2"} title="Test Cases">
+                            <TestCases testCases={testDrive.testCases}
+                                newTestCase={testCase}
                                 saveTestCase={(t) => dispatch(saveTestCase(t))}
                                 editTestCase={(t) => dispatch(editTestCase(t))}
+                                deleteTestCase={(id) => dispatch(deleteTestCase(id))}
                                 onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
                             />
                         </Tab>
-                        <Tab label="Add Survey">Add Survey</Tab>
+                        <Tab eventKey={"3"} title="Survey">
+                            Questions
+                        </Tab>
                     </Tabs>
+
+
                 </Loader>
             </div>
         );
@@ -76,7 +86,9 @@ const mapStateToProps = (state, ownProps) => {
     return {
         testDrive: testDrive,
         testDrives: testDrives,
-        loading: state.testDriveState.loading || state.asyncInitialState.loading
+        loading: state.testDriveState.loading || state.asyncInitialState.loading,
+        activeTab: state.testDriveState.activeTab || "1",
+        testCase: state.testDriveState.testCase
     }
 };
 
