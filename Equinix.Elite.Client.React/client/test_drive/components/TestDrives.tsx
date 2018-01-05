@@ -8,8 +8,8 @@ import {
 
 interface AppProps {
     testDrives: model.TestDrive[];
-    handleEdit: (t: model.TestDrive) => void;
-    handleDelete: (id: number) => any;
+    editTestDrive: (t: model.TestDrive) => void;
+    deleteTestDrive: (id: number) => any;
 
 };
 
@@ -18,14 +18,15 @@ class TestDrives extends React.Component<AppProps> {
         super(props, context);
     }
     render() {
+        const { editTestDrive, deleteTestDrive, testDrives} = this.props
         return <div>
         {
-            this.props.testDrives.map(testDrive =>{
+            testDrives.map(testDrive =>{
             return <TestDriveItem 
                 key={testDrive.id} 
                 testDrive={testDrive} 
-                handleEdit={this.props.handleEdit}
-                handleDelete={this.props.handleDelete}/>
+                editTestDrive={editTestDrive}
+                deleteTestDrive={deleteTestDrive}/>
         })
     }</div>
     }

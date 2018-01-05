@@ -27,21 +27,23 @@ class TestCases extends React.Component<TestCasesProps> {
     }
 
     render() {
-        const { testCases, saveTestCase, editTestCase, onChange, newTestCase, deleteTestCase} = this.props;
+        const { testCases, saveTestCase, editTestCase, onChange, newTestCase, deleteTestCase } = this.props;
         return (
-            <div className="test-cases-container" >
-                {
-                    testCases && testCases.map(testCase => {
-                        return <TestCaseForm
-                            testCase={(testCase && testCase.isInEditMode) ? { ...newTestCase, isInEditMode: true } : testCase}
-                            saveTestCase={saveTestCase}
-                            editTestCase={editTestCase}
-                            deleteTestCase={deleteTestCase}
-                            onChange={onChange}
-                            key={testCase.id}
-                        />
-                    })
-                }
+            <div className="test-case-container col-xs-12">
+                <div className="col-md-12">
+                    {
+                        testCases && testCases.map(testCase => {
+                            return <TestCaseForm
+                                testCase={(testCase && testCase.isInEditMode) ? { ...newTestCase, isInEditMode: true } : testCase}
+                                saveTestCase={saveTestCase}
+                                editTestCase={editTestCase}
+                                deleteTestCase={deleteTestCase}
+                                onChange={onChange}
+                                key={testCase.id}
+                            />
+                        })
+                    }
+                </div>
             </div>
         );
     }

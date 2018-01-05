@@ -1,5 +1,11 @@
 import * as React from 'react';
 import { TestDrive, IState } from '../model';
+import testDriveService from '../api/mockApi';
+import * as $ from 'jquery';
+import 'bootstrap-datepicker'
+import Select from 'react-select';
+import 'react-select/dist/react-select.css';
+
 import {
     FieldGroup,
     Checkbox,
@@ -22,160 +28,202 @@ interface TestDriveFormProps {
     saveTestDrive: (testDrive: TestDrive) => any;
     submitTestDrive: (testDrive: TestDrive) => any;
     onChange: (event: any, testDrive: TestDrive) => any;
+    updateMultiSelect: (value: any, testDrive: TestDrive) => any;
 };
 interface TestDriveFormState {
     testDrive
 };
 
 class TestDriveForm extends React.Component<TestDriveFormProps, TestDriveFormState> {
-    formStyle = {
-        marginTop: '20px',
-        marginBottom: '50px'
-    }
-
-    butttonGroup = {
-        float: 'right'
-    }
-
     constructor(props, context) {
         super(props, context);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.multiSelectChange = this.multiSelectChange.bind(this);
     }
 
     onChange = (e) => {
         this.props.onChange(e, this.props.testDrive);
     }
 
-    handleSave = (e) => {
-        this.props.saveTestDrive(this.props.testDrive);
+    multiSelectChange = (value) => {
+        this.props.updateMultiSelect(value, this.props.testDrive);
+    }
+    getFunctions(input, callback) {
+        const functions = testDriveService.getFunctions().then((functions: Array<any>) => {
+            input = input.toLowerCase();
+            var options = functions.filter((i: any) => {
+                return i.function.substr(0, input.length) === input;
+            });
+            var data = {
+                options: options.slice(0, 5),
+                complete: options.length <= 6,
+            };
+            callback(null, data);
+        })
     }
 
-    handleSubmit = (e) => {
-        this.props.submitTestDrive(this.props.testDrive);
+    getLocations(input, callback) {
+        const functions = testDriveService.getLocations().then((locations: Array<any>) => {
+            input = input.toLowerCase();
+            var options = locations.filter((i: any) => {
+                return i.location.substr(0, input.length) === input;
+            });
+            var data = {
+                options: options.slice(0, 5),
+                complete: options.length <= 6,
+            };
+            callback(null, data);
+        })
     }
 
+    getDevices(input, callback) {
+        const functions = testDriveService.getDevices().then((devices: Array<any>) => {
+            input = input.toLowerCase();
+            var options = devices.filter((i: any) => {
+                return i.device.substr(0, input.length) === input;
+            });
+            var data = {
+                options: options.slice(0, 5),
+                complete: options.length <= 6,
+            };
+            callback(null, data);
+        })
+    }
+
+    getOSes(input, callback) {
+        const functions = testDriveService.getOSes().then((oses: Array<any>) => {
+            input = input.toLowerCase();
+            var options = oses.filter((i: any) => {
+                return i.os.substr(0, input.length) === input;
+            });
+            var data = {
+                options: options.slice(0, 5),
+                complete: options.length <= 6,
+            };
+            callback(null, data);
+        })
+    }
 
     render() {
-        const { testDrive } = this.props;
+        const { testDrive, saveTestDrive, submitTestDrive, updateMultiSelect } = this.props;
+        const butttonGroup = {
+            float: 'right'
+        }
         return (
-            <div className="container" style={this.formStyle}>
-                    <form>
-                        <FormGroup controlId="testDriveTitle" >
-                            <ControlLabel>Title</ControlLabel>
-                            <FormControl type="text" onChange={this.onChange} name="title"
-                                value={testDrive.title || ""} />
-                            <HelpBlock>Enter the title of test drive.</HelpBlock>
-                        </FormGroup>
-
-                        <FormGroup controlId="testDriveDescription">
-                            <ControlLabel>Description</ControlLabel>
-                            <FormControl componentClass="textarea"
-                                placeholder="textarea"
-                                onChange={this.onChange}
-                                name="description"
-                                value={testDrive.description || ""} />
-                            <HelpBlock>Descript the test drive.</HelpBlock>
-                        </FormGroup>
-
-                        <FormGroup controlId="testDriveStartDate" >
-                            <ControlLabel>Stat Date</ControlLabel>
-                            <FormControl type="date"
+            <form className="registration_form">
+                <div className="col-xs-12 form_box">
+                    <div className="col-md-12 register_input">
+                        <input className="inputMaterial"
+                            type="text"
+                            required
+                            onChange={this.onChange}
+                            name="title"
+                            value={testDrive.title || ""}
+                        />
+                        <span className="highlight"></span>
+                        <span className="bar"></span>
+                        <label>Test drive title</label>
+                    </div>
+                    <div className="col-md-12 register_input">
+                        <textarea className="inputMaterial"
+                            required
+                            onChange={this.onChange}
+                            name="description"
+                            value={testDrive.description || ""}
+                        />
+                        <span className="highlight"></span>
+                        <span className="bar"></span>
+                        <label className="disc_lable">Description</label>
+                    </div>
+                    <div className="col-md-4 register_input">
+                        <div className="form-group">
+                            <input className="form-control inputMaterial date_box"
+                                id="date"
                                 onChange={this.onChange}
                                 name="startDate"
                                 value={testDrive.startDate || ''}
-                            />
-                            <HelpBlock>Start Date</HelpBlock>
-                        </FormGroup>
-
-                        <FormGroup controlId="testDriveEndDate" >
-                            <ControlLabel>End Date</ControlLabel>
-                            <FormControl type="date"
+                                placeholder="Start Date"
+                                type="text" />
+                        </div>
+                    </div>
+                    <div className="col-md-4 register_input">
+                        <div className="form-group">
+                            <input className="form-control inputMaterial date_box"
+                                id="date   "
                                 onChange={this.onChange}
                                 name="endDate"
                                 value={testDrive.endDate || ''}
-                            />
-                            <HelpBlock>Start Date</HelpBlock>
-                        </FormGroup>
+                                placeholder="End Date"
+                                type="text" />
+                        </div>
+                    </div>
+                    <div className="col-md-12 register_input">
+                        <textarea className="inputMaterial"
+                            name="expectedBusinessValue"
+                            onChange={this.onChange}
+                            value={testDrive.expectedBusinessValue || ""}
+                            required
+                        />
+                        <span className="highlight"></span>
+                        <span className="bar"></span>
+                        <label className="disc_lable">Expected Business Value</label>
+                    </div>
 
-                        <FormGroup controlId="testDriveSMaxPoints" >
-                            <ControlLabel>Max Points</ControlLabel>
-                            <FormControl type="number"
-                                onChange={this.onChange}
-                                name="maxPoints"
-                                value={testDrive.maxPoints || 0} />
-                            <HelpBlock>Start Date</HelpBlock>
-                        </FormGroup>
+                    <Select.Async multi={true}
+                        value={testDrive.function}
+                        onChange={this.multiSelectChange}
+                        valueKey="function"
+                        labelKey="name"
+                        loadOptions={this.getFunctions}
+                        type="select-multiple"
+                    />
+                    <br></br>
 
-                        <FormGroup controlId="testDriveExpectedBusinessValue">
-                            <ControlLabel>Expected Business Value</ControlLabel>
-                            <FormControl componentClass="textarea"
-                                placeholder="textarea"
-                                onChange={this.onChange}
-                                name="expectedBusinessValue" 
-                                value={testDrive.expectedBusinessValue || ""}/>
-                            <HelpBlock>Descript the test drive.</HelpBlock>
-                        </FormGroup>
+                    <Select.Async multi={true}
+                        value={testDrive.location}
+                        onChange={this.multiSelectChange}
+                        valueKey="location"
+                        labelKey="name"
+                        loadOptions={this.getLocations}
+                        type="select-multiple"
+                    />
 
-                        <FormGroup controlId="testDriveEligibleDriverFunction">
-                            <ControlLabel>Eligible Driver Function</ControlLabel>
-                            <FormControl componentClass="select" multiple
-                                onChange={this.onChange}
-                                name="functon"
-                                value={testDrive.functon || []}>
-                                <option value="HR">HR</option>
-                                <option value="Management">Management</option>
-                                <option value="Development">Development</option>
-                            </FormControl>
-                        </FormGroup>
+                    <br></br>
+                    <Select.Async multi={true}
+                        value={testDrive.requiredDevices}
+                        onChange={this.multiSelectChange}
+                        valueKey="device"
+                        labelKey="name"
+                        loadOptions={this.getDevices}
+                        type="select-multiple"
+                    />
 
-                        <FormGroup controlId="testDriveEligibleDriverLocation">
-                            <ControlLabel>Eligible Driver Location</ControlLabel>
-                            <FormControl componentClass="select" multiple
-                                onChange={this.onChange}
-                                name="location"
-                                value={testDrive.location || []}>
-                                <option value="India">India</option>
-                                <option value="USA">USA</option>
-                                <option value="France">France</option>
-                            </FormControl>
-                        </FormGroup>
+                    <br></br>
 
-                        <FormGroup controlId="testDriveRequiredDevices">
-                            <ControlLabel>Required Devices</ControlLabel>
-                            <FormControl componentClass="select" multiple
-                                onChange={this.onChange}
-                                name="requiredDevices"
-                                value={testDrive.requiredDevices || []}>
-                                <option value="Device1">Device1</option>
-                                <option value="Device2">Device2</option>
-                                <option value="Device3">Device3</option>
-                            </FormControl>
-                        </FormGroup>
+                    <Select.Async multi={true}
+                        value={testDrive.requiredOs}
+                        onChange={this.multiSelectChange}
+                        valueKey="os"
+                        labelKey="name"
+                        loadOptions={this.getOSes}
+                        type="select-multiple"
+                    />
 
-                        <FormGroup controlId="testDriveRequiredOS">
-                            <ControlLabel>Required OS</ControlLabel>
-                            <FormControl componentClass="select" multiple
-                                onChange={this.onChange}
-                                name="requiredOs"
-                                value={testDrive.requiredOs || []}>
-                                <option value="OS1">OS1</option>
-                                <option value="OS2">OS2</option>
-                                <option value="OS3">OS3</option>
-                            </FormControl>
-                        </FormGroup>
+                    <br></br>
 
-                        <ButtonToolbar style={this.butttonGroup}>
-                            {/* Provides extra visual weight and identifies the primary action in a set of buttons */}
-                            <Button bsStyle="primary" onClick={this.handleSave} >Save</Button>
+                    <ButtonToolbar style={butttonGroup}>
+                       <button className="button type1 nextBtn btn-lg pull-right">
+                        Next
+                       </button>
 
-                            {/* Indicates a successful or positive action */}
-                            <Button bsStyle="success" onClick={this.handleSubmit} >Submit</Button>
-                        </ButtonToolbar>
+                       <button className="button type1 nextBtn btn-lg pull-right"
+                       onClick={() => { saveTestDrive(testDrive) }}>
+                        Save
+                       </button>
 
-                    </form>
-            </div>
+                    </ButtonToolbar>
+                </div>
+            </form>
         );
     }
 }

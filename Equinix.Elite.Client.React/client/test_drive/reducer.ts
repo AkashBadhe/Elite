@@ -37,7 +37,7 @@ const initialState: IState = {
         startDate: "",
         endDate: "",
         expectedBusinessValue: "",
-        functon: ["Management", "Development"],
+        function: ["Management", "Development"],
         location: ["India", "USA"],
         requiredDevices: ["Device1"],
         requiredOs: ["OS1", "OS2"],
@@ -59,7 +59,7 @@ const initialState: IState = {
     activeTab: '1'
 };
 
-export default handleActions<IState, TestDrive>({
+export default handleActions<IState, any>({
     [UPDATE_TestDrive]: (state: IState, action: Action<TestDrive>): IState => {
         return {
             ...state,
@@ -76,12 +76,12 @@ export default handleActions<IState, TestDrive>({
         }
     },
 
-    [DELETE_TestDrive]: (state: IState, action: Action<TestDrive>): IState => {
+    [DELETE_TestDrive]: (state: IState, action: Action<number>): IState => {
         const testDrives = state.testDrives;
         return {
             ...state,
             testDrives: testDrives.filter((testDrive)=>{
-                return testDrive.id !== action.payload.id;
+                return testDrive.id !== action.payload;
             })
             
         }

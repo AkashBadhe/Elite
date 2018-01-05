@@ -46,6 +46,10 @@ module.exports = (options) => ({
   },
   plugins: options.plugins.concat([
     new webpack.NamedModulesPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    })
   ]),
 
   node: {

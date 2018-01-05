@@ -23,8 +23,8 @@ class TestDriveContainer extends React.Component<AppProps> {
       <Loader show={testDriveState.loading} message={'loading'}>
         <TestDrives 
           testDrives={testDriveState.testDrives} 
-          handleEdit={(t: model.TestDrive) => dispatch(editTestDrive(t))}
-          handleDelete={(id: number) => dispatch(deleteTestDrive(id))}
+          editTestDrive={(t: model.TestDrive) => dispatch(editTestDrive(t))}
+          deleteTestDrive={(id: number) => dispatch(deleteTestDrive(id))}
         />
       </Loader>
       </div>

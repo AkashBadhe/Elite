@@ -23,7 +23,7 @@ export type TestDrive = {
     startDate: string;
     endDate: string;
     expectedBusinessValue: string;
-    functon: Array<string>;
+    function: Array<string>;
     location: Array<string>;
     requiredDevices: Array<string>;
     requiredOs: Array<string>;

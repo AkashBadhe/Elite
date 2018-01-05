@@ -67,10 +67,26 @@ const updateTestDrive = createAction<TestDrive, any, TestDrive>(
   }
 );
 
+const updateMultiSelect = createAction<any, any, TestDrive>(
+  UPDATE_TestDrive,
+  (value: any, testDrive: TestDrive) => {
+      if(value[0].hasOwnProperty('function') === true){
+        testDrive['function'] = value;
+      }else if(value[0].hasOwnProperty('location') === true){
+        testDrive['location'] = value;
+      }else if(value[0].hasOwnProperty('device') === true){
+        testDrive['requiredDevices'] = value;
+      }else if(value[0].hasOwnProperty('os') === true){
+        testDrive['requiredOs'] = value;
+      }
+      return testDrive;
+  }
+)
+
 const deleteTestDrive = createAction<number, number>(
   DELETE_TestDrive,
   (id: number) => {
-    return -1;
+    return id;
   }
 );
 
@@ -113,14 +129,15 @@ const updateTestCase = createAction<TestCase, any, TestCase>(
   }
 )
 
-const switchTab = createAction<number, number>(
+const switchTab = createAction<string, string>(
   SWITCH_Tab,
-  (key: number)=>{
+  (key: string)=>{
     return key;
   }
 )
 
 export {
+
   deleteTestDrive,
   editTestDrive,
   saveTestDrive,
@@ -130,5 +147,6 @@ export {
   deleteTestCase,
   saveTestCase,
   updateTestCase,
-  switchTab
+  switchTab,
+  updateMultiSelect
 }
