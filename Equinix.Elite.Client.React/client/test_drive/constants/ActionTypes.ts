@@ -10,6 +10,8 @@ export const SAVE_TestDrive_FULFILLED = "SAVETestDrive_FULFILLED";
 export const SUBMIT_TestDrive_PENDING = "SUBMITTestDrive_PENDING";
 export const SUBMIT_TestDrive_FULFILLED = "SUBMITTestDrive_FULFILLED";
 export const SWITCH_Tab = "SWITCH_Tab";
+export const UPDATE_Date = "UPDATE_Date"; 
+export const DATE_FocusChange = "DATE_FocusChange";
 
 
 // Test Case Actions.

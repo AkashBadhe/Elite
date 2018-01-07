@@ -2233,10 +2233,7 @@ text-align: center;
 }
 
 .stepwizard-step .btn-default:focus{ background-color: #000000d6;}
-a.btn.btn-default {
-    border-right: solid 2px #000;
-color: #fff;
-}
+
 
 .left{position:absolute; left:0px; transition: 0.9s;}
 .middle{margin-left: 336px; transition: 0.9s;}
@@ -2539,4 +2536,19 @@ ul.select2-results__optionss li {
 
 .tab-container{
   margin-top: 30px;
+}
+
+.date-picker {
+  height: 260px;
+    margin-top: 316px;
+    margin-bottom: 20px;
+    width: 575px;
+    margin-left: 15px;
+    position: relative;
+    top: -62px;
+}
+
+.tab_border {
+  border-right: solid 2px #000 ;
+  color: #fff;
 }

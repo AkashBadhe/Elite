@@ -22,7 +22,9 @@ import {
     EDITQuestion,
     SAVEQuestion,
     SUBMITQuestion,
-    SWITCH_Tab
+    SWITCH_Tab,
+    UPDATE_Date,
+    DATE_FocusChange
 
 } from './constants/ActionTypes';
 import { access, stat } from 'fs';
@@ -63,7 +65,7 @@ export default handleActions<IState, any>({
     [UPDATE_TestDrive]: (state: IState, action: Action<TestDrive>): IState => {
         return {
             ...state,
-            testDrive: {...state.testDrive, ...action.payload},
+            testDrive: { ...state.testDrive, ...action.payload },
             loading: false,
         }
     },
@@ -80,10 +82,10 @@ export default handleActions<IState, any>({
         const testDrives = state.testDrives;
         return {
             ...state,
-            testDrives: testDrives.filter((testDrive)=>{
+            testDrives: testDrives.filter((testDrive) => {
                 return testDrive.id !== action.payload;
             })
-            
+
         }
     },
 
@@ -120,7 +122,27 @@ export default handleActions<IState, any>({
         }
     },
 
-    
+    [ADD_TestCase]: (state: IState, action: Action<any>): IState => {
+        const testCase = {
+            id: -1,
+            title: "",
+            description: "",
+            expectedOutcome: "",
+            isInEditMode: true,
+            testCaseType: "",
+        }
+        return {
+            ...state,
+
+            testDrive: {
+                ...state.testDrive, testCases: state.testDrive.testCases.map(testCase => {
+                    return { ...testCase, isInEditMode: false }
+                }).concat(testCase)
+            },
+            testCase: testCase,
+            loading: false
+        }
+    },
 
     [EDIT_TestCase]: (state: IState, action: Action<TestCase>): IState => {
         const testDrive = state.testDrive;
@@ -129,18 +151,17 @@ export default handleActions<IState, any>({
             testDrive: {
                 ...testDrive, testCases: testDrive.testCases.map(testCase => {
                     return testCase.id === action.payload.id ?
-                        { ...testCase, isInEditMode: true } : 
-                        {...testCase, isInEditMode: false}
+                        { ...testCase, isInEditMode: true } :
+                        { ...testCase, isInEditMode: false }
                 })
             },
             testCase: { ...action.payload, isInEditMode: true }
         }
     },
-
     [UPDATE_TestCase]: (state: IState, action: Action<TestCase>): IState => {
         return {
             ...state,
-            testCase: {...state.testCase, ...action.payload}
+            testCase: { ...state.testCase, ...action.payload }
         }
     },
 
@@ -150,8 +171,8 @@ export default handleActions<IState, any>({
             ...state,
             testDrive: {
                 ...testDrive, testCases: testDrive.testCases.map(testCase => {
-                    return testCase.id === action.payload.id ? 
-                        {...action.payload, isInEditMode: false} : testCase;
+                    return testCase.id === action.payload.id ?
+                        { ...action.payload, isInEditMode: false } : testCase;
                 })
             }
         }
@@ -168,12 +189,23 @@ export default handleActions<IState, any>({
             }
         }
     },
+    [UPDATE_Date]: (state: IState, action: Action<any>): IState => {
+        const testDrive = state.testDrive;
+        return {
+            ...state,
+            testDrive: {
+                ...testDrive, startDate: action.payload.startDate, endDate: action.payload.endDate
+            }
+        }
+    },
 
     [SWITCH_Tab]: (state: IState, action: Action<string>): IState => {
         return {
             ...state,
             activeTab: action.payload
         }
-    }
+    },
+
+
 
 }, initialState);

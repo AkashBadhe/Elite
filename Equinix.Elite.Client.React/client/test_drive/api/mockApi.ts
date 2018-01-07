@@ -199,6 +199,15 @@ class TestDriveApi {
     });
   }
 
+  static formatDate(date: string) {
+    let today = date && date.toLowerCase() !== "today" ? new Date(date) : new Date();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+    
+    return dd + '-' + mm + '-' + yyyy;
+  }
+
 }
 
 export default TestDriveApi;

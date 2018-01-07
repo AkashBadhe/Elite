@@ -7,7 +7,7 @@ import TestDriveForm from './TestDriveForm';
 import TestCases from './TestCases';
 import Loader from 'react-loader-advanced';
 import TabCar from './TabCar';
-
+import ui from 'redux-ui';
 import {
     model,
     saveTestDrive,
@@ -18,7 +18,9 @@ import {
     deleteTestCase,
     updateTestCase,
     switchTab,
-    updateMultiSelect
+    updateMultiSelect,
+    updateDate,
+    addTestCase
 } from '../../test_drive';
 
 interface AppProps {
@@ -27,29 +29,34 @@ interface AppProps {
     testCase: model.TestCase;
     loading: boolean;
     activeTab: string;
+    updateUI: (any) => any;
+    ui: any;
     dispatch: Dispatch<{}>;
 };
 
+@ui({
+    state: {
+        activeTab: '1',
+    }
+})
 class ManageTestDrive extends React.Component<AppProps> {
     constructor(props, context) {
         super(props, context);
         this.getTabClass.bind(this);
     }
 
-    getTabClass(key){
+    getTabClass(key) {
         return this.props.activeTab === key ? "show-tab" : "hide-tab";
     }
-
-
     render() {
-        const { testDrive, dispatch, loading, activeTab, testCase } = this.props;
+        const { testDrive, dispatch, loading, activeTab, testCase, ui, updateUI} = this.props;
         return (
             <div className="container">
                 <h2>REGISTER A TEST DRIVE</h2>
                 <div className="col-md-12">
                     <div className="wrapper">
                         <Loader show={loading} message={'Loading...'}>
-                            <TabCar switchTab={(key) => dispatch(switchTab(key))}/>
+                            <TabCar switchTab={(key) => dispatch(switchTab(key))} />
                             <div className={"row setup-content " + this.getTabClass('step-1')} id="step-1" >
                                 <div className="col-xs-12 form_box tab-container">
                                     <TestDriveForm
@@ -58,6 +65,9 @@ class ManageTestDrive extends React.Component<AppProps> {
                                         submitTestDrive={(t) => dispatch(submitTestDrive(t))}
                                         onChange={(e, testDrive) => dispatch(updateTestDrive(e, testDrive))}
                                         updateMultiSelect={(value, testDrive) => dispatch(updateMultiSelect(value, testDrive))}
+                                        updateDates={(dates) => dispatch(updateDate(dates))}
+                                        updateUI={updateUI}
+                                        ui={ui}
                                     />
                                 </div>
                             </div>
@@ -69,6 +79,7 @@ class ManageTestDrive extends React.Component<AppProps> {
                                         editTestCase={(t) => dispatch(editTestCase(t))}
                                         deleteTestCase={(id) => dispatch(deleteTestCase(id))}
                                         onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
+                                        addTestCase ={() => dispatch(addTestCase())}
                                     />
                                 </div>
                             </div>

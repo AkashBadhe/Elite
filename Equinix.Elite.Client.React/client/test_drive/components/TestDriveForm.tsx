@@ -2,10 +2,10 @@ import * as React from 'react';
 import { TestDrive, IState } from '../model';
 import testDriveService from '../api/mockApi';
 import * as $ from 'jquery';
-import 'bootstrap-datepicker'
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-
+import { DateRange, Calendar } from 'react-date-range';
+import ui from 'redux-ui';
 import {
     FieldGroup,
     Checkbox,
@@ -22,6 +22,7 @@ import {
     Col,
 
 } from 'react-bootstrap';
+import { updateDate } from '../index';
 
 interface TestDriveFormProps {
     testDrive: TestDrive,
@@ -29,14 +30,27 @@ interface TestDriveFormProps {
     submitTestDrive: (testDrive: TestDrive) => any;
     onChange: (event: any, testDrive: TestDrive) => any;
     updateMultiSelect: (value: any, testDrive: TestDrive) => any;
-};
+    updateDates: (dates: any) => any;
+    updateUI: (any) => any;
+    ui: any;
+}
+
 interface TestDriveFormState {
     testDrive
 };
 
+@ui({
+    state: {
+        focusedInput: 'startDate',
+        startDate: null,
+        endDate: null,
+        rangePicker: null,
+        showDatePicker: false
+    }
+})
 class TestDriveForm extends React.Component<TestDriveFormProps, TestDriveFormState> {
-    constructor(props, context) {
-        super(props, context);
+    constructor(props, state) {
+        super(props, state);
         this.onChange = this.onChange.bind(this);
         this.multiSelectChange = this.multiSelectChange.bind(this);
     }
@@ -48,6 +62,7 @@ class TestDriveForm extends React.Component<TestDriveFormProps, TestDriveFormSta
     multiSelectChange = (value) => {
         this.props.updateMultiSelect(value, this.props.testDrive);
     }
+
     getFunctions(input, callback) {
         const functions = testDriveService.getFunctions().then((functions: Array<any>) => {
             input = input.toLowerCase();
@@ -104,12 +119,26 @@ class TestDriveForm extends React.Component<TestDriveFormProps, TestDriveFormSta
         })
     }
 
+    handleChange(which, payload) {
+        this.props.updateDates({
+            startDate: payload['startDate'].toISOString(),
+            endDate: payload['endDate'].toISOString()
+        })
+        this.props.updateUI({
+            [which]: payload
+        });
+    }
+
+
+
     render() {
-        const { testDrive, saveTestDrive, submitTestDrive, updateMultiSelect } = this.props;
+        const { testDrive, saveTestDrive, submitTestDrive, updateMultiSelect, ui, updateUI } = this.props;
         const butttonGroup = {
             float: 'right'
         }
+        const format = 'dddd, D MMMM YYYY';
         return (
+
             <form className="registration_form">
                 <div className="col-xs-12 form_box">
                     <div className="col-md-12 register_input">
@@ -135,28 +164,46 @@ class TestDriveForm extends React.Component<TestDriveFormProps, TestDriveFormSta
                         <span className="bar"></span>
                         <label className="disc_lable">Description</label>
                     </div>
-                    <div className="col-md-4 register_input">
+
+                    <div className="col-md-6 register_input">
                         <div className="form-group">
                             <input className="form-control inputMaterial date_box"
-                                id="date"
-                                onChange={this.onChange}
+                                id="startDate"
                                 name="startDate"
-                                value={testDrive.startDate || ''}
                                 placeholder="Start Date"
-                                type="text" />
+                                type="text"
+                                value={testDriveService.formatDate(testDrive.startDate) || ''}
+                                onFocus={() => { updateUI({ showDatePicker: true }) }}
+                                onBlur={() => { updateUI({ showDatePicker: false }) }}
+                            />
                         </div>
                     </div>
-                    <div className="col-md-4 register_input">
+
+
+                    <div className="col-md-6 register_input">
                         <div className="form-group">
                             <input className="form-control inputMaterial date_box"
-                                id="date   "
-                                onChange={this.onChange}
+                                id="endDate"
                                 name="endDate"
-                                value={testDrive.endDate || ''}
                                 placeholder="End Date"
-                                type="text" />
+                                type="text"
+                                value={testDriveService.formatDate(testDrive.endDate) || ''}
+                                onFocus={() => { updateUI({ showDatePicker: true }) }}
+                                onBlur={() => { updateUI({ showDatePicker: false }) }}
+                            />
                         </div>
                     </div>
+
+                    <div className={ui.showDatePicker ? "show-tab" : "hide-tab"}>
+                        <div className="register_input date-picker" >
+                            <DateRange
+                                onChange={this.handleChange.bind(this, 'rangePicker')}
+                                minDate={testDriveService.formatDate("today")}
+                            />
+                        </div>
+                    </div>
+
+
                     <div className="col-md-12 register_input">
                         <textarea className="inputMaterial"
                             name="expectedBusinessValue"
@@ -168,60 +215,57 @@ class TestDriveForm extends React.Component<TestDriveFormProps, TestDriveFormSta
                         <span className="bar"></span>
                         <label className="disc_lable">Expected Business Value</label>
                     </div>
+                    <div className="col-md-12">
+                        <Select.Async multi={true}
+                            value={testDrive.function}
+                            onChange={this.multiSelectChange}
+                            valueKey="function"
+                            labelKey="name"
+                            loadOptions={this.getFunctions}
+                            type="select-multiple"
+                        />
+                        <br></br>
 
-                    <Select.Async multi={true}
-                        value={testDrive.function}
-                        onChange={this.multiSelectChange}
-                        valueKey="function"
-                        labelKey="name"
-                        loadOptions={this.getFunctions}
-                        type="select-multiple"
-                    />
+                        <Select.Async multi={true}
+                            value={testDrive.location}
+                            onChange={this.multiSelectChange}
+                            valueKey="location"
+                            labelKey="name"
+                            loadOptions={this.getLocations}
+                            type="select-multiple"
+                        />
+
+                        <br></br>
+                        <Select.Async multi={true}
+                            value={testDrive.requiredDevices}
+                            onChange={this.multiSelectChange}
+                            valueKey="device"
+                            labelKey="name"
+                            loadOptions={this.getDevices}
+                            type="select-multiple"
+                        />
+
+                        <br></br>
+
+                        <Select.Async multi={true}
+                            value={testDrive.requiredOs}
+                            onChange={this.multiSelectChange}
+                            valueKey="os"
+                            labelKey="name"
+                            loadOptions={this.getOSes}
+                            type="select-multiple"
+                        />
+                    </div>
+
                     <br></br>
-
-                    <Select.Async multi={true}
-                        value={testDrive.location}
-                        onChange={this.multiSelectChange}
-                        valueKey="location"
-                        labelKey="name"
-                        loadOptions={this.getLocations}
-                        type="select-multiple"
-                    />
-
-                    <br></br>
-                    <Select.Async multi={true}
-                        value={testDrive.requiredDevices}
-                        onChange={this.multiSelectChange}
-                        valueKey="device"
-                        labelKey="name"
-                        loadOptions={this.getDevices}
-                        type="select-multiple"
-                    />
-
-                    <br></br>
-
-                    <Select.Async multi={true}
-                        value={testDrive.requiredOs}
-                        onChange={this.multiSelectChange}
-                        valueKey="os"
-                        labelKey="name"
-                        loadOptions={this.getOSes}
-                        type="select-multiple"
-                    />
-
-                    <br></br>
-
+                    <div className="col-md-12">
                     <ButtonToolbar style={butttonGroup}>
-                       <button className="button type1 nextBtn btn-lg pull-right">
-                        Next
-                       </button>
-
-                       <button className="button type1 nextBtn btn-lg pull-right"
-                       onClick={() => { saveTestDrive(testDrive) }}>
-                        Save
-                       </button>
+                        <input type="button" value="Next" className="button type1 nextBtn btn-lg pull-right" />
+                        <input type="button" value="Save" className="button type1 nextBtn btn-lg pull-right"
+                            onClick={() => { saveTestDrive(testDrive) }} />
 
                     </ButtonToolbar>
+                    </div>
                 </div>
             </form>
         );

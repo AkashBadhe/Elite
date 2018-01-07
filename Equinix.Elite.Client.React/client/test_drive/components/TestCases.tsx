@@ -14,6 +14,7 @@ import {
 interface TestCasesProps {
     testCases: TestCase[];
     newTestCase: TestCase;
+    addTestCase: () => any;
     deleteTestCase: (id: number) => any;
     saveTestCase: (testCase: TestCase) => any;
     editTestCase: (TestCase: TestCase) => any;
@@ -27,7 +28,7 @@ class TestCases extends React.Component<TestCasesProps> {
     }
 
     render() {
-        const { testCases, saveTestCase, editTestCase, onChange, newTestCase, deleteTestCase } = this.props;
+        const { testCases, saveTestCase, editTestCase, onChange, newTestCase, deleteTestCase, addTestCase} = this.props;
         return (
             <div className="test-case-container col-xs-12">
                 <div className="col-md-12">
@@ -43,6 +44,9 @@ class TestCases extends React.Component<TestCasesProps> {
                             />
                         })
                     }
+                </div>
+                <div className="col-md-2 add_test pull-right text-right">
+                    <a href="#" onClick={addTestCase}> + add test case </a>
                 </div>
             </div>
         );

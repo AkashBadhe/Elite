@@ -21,7 +21,10 @@ import {
   SAVEQuestion,
   SUBMITQuestion,
   UPDATE_TestCase,
-  SWITCH_Tab
+  SWITCH_Tab,
+  UPDATE_Date,
+  DATE_FocusChange
+
 } from './constants/ActionTypes';
 
 //  const addTestDrive = createAction<TestDrive, TestDrive>(
@@ -90,6 +93,10 @@ const deleteTestDrive = createAction<number, number>(
   }
 );
 
+const addTestCase = createAction(
+  ADD_TestCase
+);
+
 const editTestCase = createAction<TestCase, TestCase>(
   EDIT_TestCase,
   (testCase: TestCase) => {
@@ -136,6 +143,20 @@ const switchTab = createAction<string, string>(
   }
 )
 
+const updateDate = createAction<any, any>(
+  UPDATE_Date,
+  (dates: any)=>{
+    return dates;
+  }
+)
+
+const onDateFocusChange = createAction<any, any>(
+  DATE_FocusChange,
+  (dates: any)=>{
+    return dates;
+  }
+)
+
 export {
 
   deleteTestDrive,
@@ -148,5 +169,8 @@ export {
   saveTestCase,
   updateTestCase,
   switchTab,
-  updateMultiSelect
+  updateMultiSelect,
+  updateDate,
+  onDateFocusChange,
+  addTestCase
 }

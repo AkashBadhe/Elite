@@ -28,7 +28,7 @@ class TabCar extends React.Component<TabCarProps>{
                 <div className="stepwizard">
                     <div className="stepwizard-row setup-panel">
                         <div  className="stepwizard-step register_drive">
-                            <a  onClick={(e) => this.switchTab(e)} className="btn btn-primary tab_border" id="step-1">Register a Test Drive</a>
+                            <a  onClick={(e) => this.switchTab(e)} className="btn btn-default btn-primary tab_border" id="step-1">Register a Test Drive</a>
                         </div>
                         <div className="stepwizard-step test_cases">
                             <a onClick={(e) => this.switchTab(e)} data-type="button" 
