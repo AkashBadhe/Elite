@@ -44,6 +44,7 @@
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^5.0.0",
     "redux-thunk": "^2.2.0",
+    "redux-ui": "^0.1.1",
     "serve-static": "1.12.1",
     "todomvc-app-css": "2.0.6",
     "ts-promise": "^1.0.0",

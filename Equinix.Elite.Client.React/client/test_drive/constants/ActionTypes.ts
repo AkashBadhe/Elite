@@ -1,5 +1,5 @@
 // Test Drive Actions.
-export const ADD_TestDrive = 'ADDTestDrive';
+export const LOAD_TestDrive = 'LOAD_TestDrive';
 export const DELETE_TestDrive = 'DELETETestDrive';
 export const EDIT_TestDrive = 'EDITTestDrive';
 export const UPDATE_TestDrive = 'UPDATE_TestDrive';
@@ -24,8 +24,9 @@ export const SUBMIT_TestCase = 'SUBMIT_TestCase';
 export const UPDATE_TestCase = 'UPDATE_TestCase';
 
 // Question Actions.
-export const ADDQuestion = 'ADDQuestion';
-export const DELETEQuestion = 'DELETEQuestion';
-export const EDITQuestion = 'EDITQuestion';
-export const SAVEQuestion = 'SAVEQuestion';
-export const SUBMITQuestion = 'SUBMITQuestion';
+export const ADD_Question = 'ADDQuestion';
+export const DELETE_Question = 'DELETEQuestion';
+export const EDIT_Question = 'EDITQuestion';
+export const SAVE_Question = 'SAVEQuestion';
+export const SUBMIT_Question = 'SUBMITQuestion';
+export const UPDATE_Question = 'UPDATE_Question';

@@ -8,6 +8,8 @@ import TestCases from './TestCases';
 import Loader from 'react-loader-advanced';
 import TabCar from './TabCar';
 import ui from 'redux-ui';
+import testDriveService from '../api/mockApi';
+import Surveys from './Surveys';
 import {
     model,
     saveTestDrive,
@@ -20,23 +22,32 @@ import {
     switchTab,
     updateMultiSelect,
     updateDate,
-    addTestCase
+    addTestCase,
+    loadTestDrive,
+    saveQuestion,
+    editQuestion,
+    deleteQuestion,
+    addQuestion,
+    updateQuestion
 } from '../../test_drive';
 
 interface AppProps {
+    id: number,
     testDrive: model.TestDrive;
-    testDrives: model.IState;
+    testDrives: model.TestDrive[];
     testCase: model.TestCase;
     loading: boolean;
     activeTab: string;
     updateUI: (any) => any;
     ui: any;
     dispatch: Dispatch<{}>;
+    questions: model.Question[];
+    question: model.Question; 
 };
 
 @ui({
     state: {
-        activeTab: '1',
+        activeTab: 'step-1',
     }
 })
 class ManageTestDrive extends React.Component<AppProps> {
@@ -46,17 +57,56 @@ class ManageTestDrive extends React.Component<AppProps> {
     }
 
     getTabClass(key) {
-        return this.props.activeTab === key ? "show-tab" : "hide-tab";
+        return this.props.ui.activeTab === key ? "show-tab" : "hide-tab";
     }
+
+    getTestDriveById(testDrives, testDriveId) {
+        const testDrive = testDrives.filter(testDrive => testDrive.id == testDriveId);
+        if (testDrive) return testDrive[0]; //since filter returns an array, have to grab the first.
+        return null;
+    }
+
+    switchTab(key){
+        this.props.updateUI({activeTab: key});
+    }
+
+    componentDidMount() {
+        let testDrive;
+        let testDriveId = this.props.id;
+        if (testDriveId) {
+            testDrive = this.getTestDriveById(this.props.testDrives, 1);
+            testDrive = testDrive ? testDrive : testDriveService.getTestDriveById(testDriveId);
+        }
+        else {
+            testDrive = {
+                id: -1,
+                title: "",
+                description: "",
+                maxPoints: 0,
+                startDate: "",
+                endDate: "",
+                expectedBusinessValue: "",
+                function: [],
+                location: [],
+                requiredDevices: [],
+                requiredOs: [],
+                maxTestDrivers: 0,
+                testCases: [],
+                questions: []
+            }
+        }
+        this.props.dispatch(loadTestDrive(testDrive));
+    }
+
     render() {
-        const { testDrive, dispatch, loading, activeTab, testCase, ui, updateUI} = this.props;
+        const { testDrive, question, dispatch, loading, activeTab, testCase, ui, updateUI } = this.props;
         return (
             <div className="container">
                 <h2>REGISTER A TEST DRIVE</h2>
                 <div className="col-md-12">
                     <div className="wrapper">
                         <Loader show={loading} message={'Loading...'}>
-                            <TabCar switchTab={(key) => dispatch(switchTab(key))} />
+                            <TabCar switchTab={(key) => this.switchTab(key)} />
                             <div className={"row setup-content " + this.getTabClass('step-1')} id="step-1" >
                                 <div className="col-xs-12 form_box tab-container">
                                     <TestDriveForm
@@ -76,43 +126,31 @@ class ManageTestDrive extends React.Component<AppProps> {
                                     <TestCases testCases={testDrive.testCases}
                                         newTestCase={testCase}
                                         saveTestCase={(t) => dispatch(saveTestCase(t))}
+                                        saveTestDrive={(t) => dispatch(saveTestDrive(t))}
                                         editTestCase={(t) => dispatch(editTestCase(t))}
                                         deleteTestCase={(id) => dispatch(deleteTestCase(id))}
                                         onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
-                                        addTestCase ={() => dispatch(addTestCase())}
+                                        addTestCase={() => dispatch(addTestCase())}
+                                        testDrive={testDrive}
                                     />
                                 </div>
                             </div>
                             <div className={"row setup-content " + this.getTabClass('step-3')} id="step-3">
                                 <div className="col-xs-12 form_box tab-container">
-                                    Questions
+                                    <Surveys questions={testDrive.questions}
+                                        newQuestion={question}
+                                        saveQuestion={(t) => dispatch(saveQuestion(t))}
+                                        saveTestDrive={(t) => dispatch(saveTestDrive(t))}
+                                        editQuestion={(t) => dispatch(editQuestion(t))}
+                                        deleteQuestion={(id) => dispatch(deleteQuestion(id))}
+                                        onChange={(e, question) => dispatch(updateQuestion(e, question))}
+                                        addQquestion={() => dispatch(addQuestion())}
+                                        testDrive={testDrive}
+                                        updateUI={updateUI}
+                                        ui={ui}
+                                    />
                                 </div>
                             </div>
-
-                            {/*<Tabs activeKey={activeTab} onSelect={(key) => dispatch(switchTab(key))}
-                                id="controlled-tab-example">
-                                <Tab eventKey={"1"} title="Test Drive">
-                                    <TestDriveForm
-                                        testDrive={testDrive}
-                                        saveTestDrive={(t) => dispatch(saveTestDrive(t))}
-                                        submitTestDrive={(t) => dispatch(submitTestDrive(t))}
-                                        onChange={(e, testDrive) => dispatch(updateTestDrive(e, testDrive))}
-                                    />
-                                </Tab>
-                                <Tab eventKey={"2"} title="Test Cases">
-                                    <TestCases testCases={testDrive.testCases}
-                                        newTestCase={testCase}
-                                        saveTestCase={(t) => dispatch(saveTestCase(t))}
-                                        editTestCase={(t) => dispatch(editTestCase(t))}
-                                        deleteTestCase={(id) => dispatch(deleteTestCase(id))}
-                                        onChange={(e, testCase) => dispatch(updateTestCase(e, testCase))}
-                                    />
-                                </Tab>
-                                <Tab eventKey={"3"} title="Survey">
-                                    Questions
-                        </Tab>
-                            </Tabs>*/}
-
                         </Loader>
                     </div>
                 </div>
@@ -120,27 +158,18 @@ class ManageTestDrive extends React.Component<AppProps> {
         );
     }
 }
-function getCourseById(testDrives, testDriveId) {
-    const testDrive = testDrives.filter(testDrive => testDrive.id == testDriveId);
-    if (testDrive) return testDrive[0]; //since filter returns an array, have to grab the first.
-    return null;
-}
+
 
 const mapStateToProps = (state, ownProps) => {
     let testDriveId = ownProps.match.params.id;
-    let testDrives = state.testDriveState.testDrives
-    let testDrive;
-    if (state.asyncInitialState.loaded && state.testDriveState.testDrive) {
-        testDrive = state.testDriveState.testDrive;
-    } else {
-        testDrive = {} // Call api to get test drive to handle direct url change case.
-    }
     return {
-        testDrive: testDrive,
-        testDrives: testDrives,
+        id: testDriveId,
+        testDrive: state.testDriveState.testDrive,
+        testDrives: state.testDriveState.testDrives,
         loading: state.testDriveState.loading || state.asyncInitialState.loading,
         activeTab: state.testDriveState.activeTab || "step-1",
-        testCase: state.testDriveState.testCase
+        testCase: state.testDriveState.testCase,
+        question: state.testDriveState.question
     }
 };
 

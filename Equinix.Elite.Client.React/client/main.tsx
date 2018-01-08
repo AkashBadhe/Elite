@@ -20,7 +20,14 @@ const initialState = {};
 const loadStore = (currentState) => {
   return new Promise(resolve => {
     testDriveApi.getTestDrives().then((data) => {
-      resolve({ ...currentState, testDriveState: { testDrives: data, loading: false } });
+      resolve({
+        ...currentState,
+        testDriveState: {
+          ...currentState.testDriveState,
+          testDrives: data,
+          loading: false
+        }
+      });
     });
   });
 }

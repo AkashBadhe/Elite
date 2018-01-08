@@ -2,7 +2,7 @@ import { handleActions, Action } from 'redux-actions';
 
 import { TestDrive, TestCase, Question, IState } from './model';
 import {
-    ADD_TestDrive,
+    LOAD_TestDrive,
     DELETE_TestDrive,
     EDIT_TestDrive,
     UPDATE_TestDrive,
@@ -17,11 +17,12 @@ import {
     EDIT_TestCase,
     SAVE_TestCase,
     UPDATE_TestCase,
-    ADDQuestion,
-    DELETEQuestion,
-    EDITQuestion,
-    SAVEQuestion,
-    SUBMITQuestion,
+    ADD_Question,
+    DELETE_Question,
+    EDIT_Question,
+    SAVE_Question,
+    SUBMIT_Question,
+    UPDATE_Question,
     SWITCH_Tab,
     UPDATE_Date,
     DATE_FocusChange
@@ -57,12 +58,27 @@ const initialState: IState = {
         testCaseType: "",
     },
     testDrives: [],
+    question: {
+        id: -1,
+        title: '',
+        type: '',
+        options: [],
+        isInEditMode: false
+    },
     loading: true,
     activeTab: '1'
 };
 
 export default handleActions<IState, any>({
     [UPDATE_TestDrive]: (state: IState, action: Action<TestDrive>): IState => {
+        return {
+            ...state,
+            testDrive: { ...state.testDrive, ...action.payload },
+            loading: false,
+        }
+    },
+
+    [LOAD_TestDrive]: (state: IState, action: Action<any>): IState => {
         return {
             ...state,
             testDrive: { ...state.testDrive, ...action.payload },
@@ -124,7 +140,7 @@ export default handleActions<IState, any>({
 
     [ADD_TestCase]: (state: IState, action: Action<any>): IState => {
         const testCase = {
-            id: -1,
+            id: state.testDrive.testCases.length,
             title: "",
             description: "",
             expectedOutcome: "",
@@ -189,6 +205,74 @@ export default handleActions<IState, any>({
             }
         }
     },
+
+    /////////////////
+    [ADD_Question]: (state: IState, action: Action<any>): IState => {
+        const question = {
+            id: state.testDrive.questions.length,
+            title: '',
+            type: '',
+            options: [],
+            isInEditMode: true
+        }
+        return {
+            ...state,
+            testDrive: {
+                ...state.testDrive, questions: state.testDrive.questions.map(question => {
+                    return { ...question, isInEditMode: false }
+                }).concat(question)
+            },
+            question: question,
+            loading: false
+        }
+    },
+
+    [EDIT_Question]: (state: IState, action: Action<Question>): IState => {
+        const testDrive = state.testDrive;
+        return {
+            ...state,
+            testDrive: {
+                ...testDrive, questions: testDrive.questions.map(question => {
+                    return question.id === action.payload.id ?
+                        { ...question, isInEditMode: true } :
+                        { ...question, isInEditMode: false }
+                })
+            },
+            question: { ...action.payload, isInEditMode: true }
+        }
+    },
+    [UPDATE_Question]: (state: IState, action: Action<Question>): IState => {
+        return {
+            ...state,
+            question: { ...state.question, ...action.payload }
+        }
+    },
+
+    [SAVE_Question]: (state: IState, action: Action<Question>): IState => {
+        const testDrive = state.testDrive;
+        return {
+            ...state,
+            testDrive: {
+                ...testDrive, questions: testDrive.questions.map(question => {
+                    return question.id === action.payload.id ?
+                        { ...action.payload, isInEditMode: false } : question;
+                })
+            }
+        }
+    },
+
+    [DELETE_Question]: (state: IState, action: Action<number>): IState => {
+        const testDrive = state.testDrive;
+        return {
+            ...state,
+            testDrive: {
+                ...testDrive, questions: testDrive.questions.filter(question => {
+                    return question.id !== action.payload
+                })
+            }
+        }
+    },
+    /////////////////
     [UPDATE_Date]: (state: IState, action: Action<any>): IState => {
         const testDrive = state.testDrive;
         return {

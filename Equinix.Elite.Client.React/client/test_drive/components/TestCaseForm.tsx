@@ -111,55 +111,11 @@ class TestCasesForm extends React.Component<TestCaseFormProps, TestCaseFormState
                                     <option value="maximum points">False Positive</option>
                                 </select>
                             </div>
-
-
                         </form>
                     </div>
                 </div>
             </div>
         );
-        {/*<div className="container" style={this.formStyle}>
-                <div className="panel-group" id="testCases">
-                    <div className="panel panel-default">
-                        <div className="panel-heading">
-                            <h4 className="panel-title">
-                                <a className="accordion-toggle" data-toggle="collapse" data-parent="#testCases" href={"#collapse" + testCase.id}>
-                                    {testCase.title}
-                                    <ButtonToolbar style={this.butttonGroup}>
-                                        <Button bsStyle="danger" onClick={() => deleteTestCase(testCase.id)}>Delete</Button>
-                                        {!testCase.isInEditMode &&
-                                            <Button bsStyle="primary" onClick={() => editTestCase(testCase)} >Edit</Button>}
-                                        {testCase.isInEditMode &&
-                                            <Button bsStyle="success" onClick={() => saveTestCase(testCase)} >Save</Button>}
-                                    </ButtonToolbar>
-                                </a>
-                            </h4>
-                        </div>
-                        <div id={"collapse" + testCase.id} className={testCase.isInEditMode ? "panel-collapse collapse in" : "panel-collapse collapse"}>
-                            <div className="panel-body">
-                                <form>
-                                    <FormGroup controlId="testDriveTitle" >
-                                        <ControlLabel>Title</ControlLabel>
-                                        <FormControl type="text" onChange={this.onChange} name="title"
-                                            value={testCase.title || ""} />
-                                        <HelpBlock>Enter the title of test drive.</HelpBlock>
-                                    </FormGroup>
-
-                                    <FormGroup controlId="testDriveDescription">
-                                        <ControlLabel>Description</ControlLabel>
-                                        <FormControl componentClass="textarea"
-                                            placeholder="textarea"
-                                            onChange={this.onChange}
-                                            name="description"
-                                            value={testCase.description || ""} />
-                                        <HelpBlock>Descript the test drive.</HelpBlock>
-                                    </FormGroup>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>*/}
     }
 }
 

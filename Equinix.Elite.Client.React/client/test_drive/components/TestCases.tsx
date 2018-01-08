@@ -19,6 +19,8 @@ interface TestCasesProps {
     saveTestCase: (testCase: TestCase) => any;
     editTestCase: (TestCase: TestCase) => any;
     onChange: (event: any, TestCase: TestCase) => any;
+    saveTestDrive: (testDrive: TestDrive) => any;
+    testDrive: TestDrive,
 };
 
 class TestCases extends React.Component<TestCasesProps> {
@@ -28,7 +30,17 @@ class TestCases extends React.Component<TestCasesProps> {
     }
 
     render() {
-        const { testCases, saveTestCase, editTestCase, onChange, newTestCase, deleteTestCase, addTestCase} = this.props;
+        const { 
+            testDrive,
+            testCases,
+            saveTestCase,
+            editTestCase,
+            onChange,
+            newTestCase,
+            deleteTestCase,
+            addTestCase,
+            saveTestDrive
+        } = this.props;
         return (
             <div className="test-case-container col-xs-12">
                 <div className="col-md-12">
@@ -47,6 +59,12 @@ class TestCases extends React.Component<TestCasesProps> {
                 </div>
                 <div className="col-md-2 add_test pull-right text-right">
                     <a href="#" onClick={addTestCase}> + add test case </a>
+                </div>
+                <div className="col-md-12">
+
+                    <input type="button" value="Next" className="button type1 nextBtn btn-lg pull-right" />
+                    <input type="button" value="Save" className="button type1 nextBtn btn-lg pull-right"
+                        onClick={() => { saveTestDrive(testDrive) }} />
                 </div>
             </div>
         );

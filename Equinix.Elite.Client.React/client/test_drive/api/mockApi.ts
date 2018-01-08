@@ -2,6 +2,7 @@ import Promise from "ts-promise";
 import delay from './delay';
 import { TestDrive } from '../model';
 
+
 const data = [
   {
     id: 1,
@@ -95,9 +96,33 @@ const data = [
 ];
 
 class TestDriveApi {
-  static saveTestDrives(testDrive: TestDrive) {
+  private static KEYS = {
+    TEST_DRIVE_ID: "TEST_DRIVE",
+    TEST_CASE_ID: "TEST_CASE_ID"
+  }
+
+  static saveTestDrive(testDrive: TestDrive) {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        resolve({ status: 'OK', testDrive });
+      }, delay);
+    });
+  }
+
+  static generateID(key: string) {
+    const id = localStorage.getItem(key);
+    if (id) {
+      return parseInt(id, 10) + 1;
+    } else {
+      localStorage.setItem(key, "0");
+      return 0;
+    }
+  }
+
+  static createTestDrive(testDrive: TestDrive) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        testDrive.id = this.generateID(this.KEYS.TEST_DRIVE_ID);
         resolve({ status: 'OK', testDrive });
       }, delay);
     });
@@ -116,6 +141,14 @@ class TestDriveApi {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(data);
+      }, delay);
+    });
+  }
+
+  static getTestDriveById(id: number) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({...data[0], id: id });
       }, delay);
     });
   }
@@ -204,7 +237,7 @@ class TestDriveApi {
     let dd = today.getDate();
     let mm = today.getMonth() + 1;
     let yyyy = today.getFullYear();
-    
+
     return dd + '-' + mm + '-' + yyyy;
   }
 

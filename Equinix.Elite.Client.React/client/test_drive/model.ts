@@ -9,9 +9,10 @@ export type TestCase = {
 
 export type Question = {
     id: number;
-    question: string;
+    title: string;
     type: string;
     options: Array<string>;
+    isInEditMode: boolean;
 }
 
 
@@ -38,6 +39,7 @@ export type IState = {
     testDrives: TestDrive[],
     testDrive: TestDrive,
     testCase: TestCase,
+    question: Question,
     loading: boolean,
     activeTab: string
 }
